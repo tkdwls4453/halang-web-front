@@ -19,6 +19,7 @@
 
       <div class="content">
         <About v-if="curContent === 'about'"/>
+        <Contact v-if="curContent === 'contact'"/>
       </div>
 
 
@@ -36,6 +37,8 @@
 
 <script>
 import About from '../components/About.vue';
+import Contact from '../components/Contact.vue';
+
 export default {
   name: 'MainPage',
   data() {
@@ -44,7 +47,8 @@ export default {
     }
   },
   components:{
-    About
+    About,
+    Contact
   }
 }
 </script>
@@ -62,6 +66,10 @@ export default {
 
 .header {
   width: 100%;
+  z-index: 10;
+  position: fixed;
+  top: 0;
+  background-color: white;
 }
 
 .logoImg {
@@ -102,21 +110,22 @@ export default {
   color: #136AB2; /* 활성화된 탭의 색상 */
 }
 
-.content {
-  height: 60vh;
+.content{
+  margin-top: 150px;
 }
 
-.footer {}
-
-.footer h3 {
+.footer{
+  padding-top: 20px;
+}
+.footer h4 {
   font-size: 1.0rem;
   color: #3B3808;
   text-align: left;
 }
 
 .footer p {
-  font-size: 0.8rem;
-  margin-left: 10px;
+  font-size: 0.8rem;  
   line-height: 1.7;
+  margin: 0px;
 }
 </style>
