@@ -4,16 +4,24 @@
       <div class="header">
         <router-link to="/" class="logoImg"></router-link>
       </div>
-      <div class="logoutWrapper">
-        <button class="logoutBtn" :disabled="isLoading">Logout</button>
+      <div v-if="!isLogin" class="loginWrapper"> 
+        <div class="title">관리자 로그인</div>
+        <div class="subtitle">관리자만 접근 가능합니다.</div>
+        <input type="text" v-model="id" placeholder="아이디"/>
+        <input type="password" v-model="password" placeholder="비밀번호"/>
+        <button class="loginBtn" :disabled="isLoading" @click="login">로그인</button>
       </div>
 
-      <div class="optionsWrapper">
+      <div v-if="isLogin" class="logoutWrapper">
+        <button class="logoutBtn" :disabled="isLoading" @click="logout">Logout</button>
+      </div>
+
+      <div v-if="isLogin" class="optionsWrapper">
         <button class="optionBtn" 
-        :class="{active: selectOption === 'portfolio'}" 
-        @click="selectOption='portfolio'" :disabled="isLoading">
-        Portfolio
-      </button>
+          :class="{active: selectOption === 'portfolio'}" 
+          @click="selectOption='portfolio'" :disabled="isLoading">
+          Portfolio
+        </button>
 
         <button class="optionBtn"
          :class="{active: selectOption === 'review'}"
@@ -22,7 +30,7 @@
         </button>
       </div>
 
-      <div class="content">
+      <div v-if="isLogin" class="content">
         <div v-if="selectOption==='portfolio'" class="portfolioInfo">
           <table class="portfolioTable">
             <thead>
@@ -96,6 +104,9 @@ export default {
   name: 'AdminPage',
   data() {
     return {
+      isLogin: false,
+      id: '',
+      password: '',
       selectOption: 'portfolio',
       showModal: false,
       isLoading: false,
@@ -113,11 +124,32 @@ export default {
       const response = await axios.get('/api/admin/posts');
       this.curProjects = response.data.data;
       console.log(this.curProjects);
+      // this.isLogin = true; // Uncomment this line for testing to force the isLogin state to true
     }catch(error){
       console.error(error);
     }
   },
   methods: {
+    async login() {
+      this.isLoading = true;
+      try {
+        const response = await axios.post('/login', { username: this.id, password: this.password });
+        console.log(response.data);
+        console.log(response.data.token);
+          this.$cookies.set('Authorization', response.data.token, '1d', '', '', true, 'Strict');
+          this.isLogin = true;
+      } catch (error) {
+        console.error(error);
+        alert('로그인 실패');
+        this.isLogin = false;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async logout() {
+      this.$cookies.remove('Authorization');
+      this.isLogin = false;
+    },
     async uploadData() {
       if (!this.newProject.portfolioImages || !this.newProject.mainImage || this.newProject.portfolioImages.length === 0) {
         alert('이미지를 넣어주세요.');
@@ -235,6 +267,60 @@ export default {
 
 .wrapper {
   width: 85%;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.loginWrapper {
+  width: 400px;
+  margin: 200px auto;
+  padding: 40px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.loginWrapper .title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.loginWrapper .subtitle {
+  font-size: 1em;
+  margin-bottom: 20px;
+  color: #888;
+}
+
+.loginWrapper input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.loginWrapper .loginBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.loginWrapper .loginBtn:disabled {
+  background-color: #aaa;
+}
+
+.loginWrapper .loginBtn:hover:enabled {
+  background-color: #555;
 }
 
 .logoutWrapper {
