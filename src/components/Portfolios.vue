@@ -84,7 +84,7 @@ export default {
 }
 
 .image {
-  width: 80%;
+  width: 100%;
   aspect-ratio: 523 / 929; /* Set the aspect ratio, adjust as needed */
   background-size: cover;
   background-position: center;
@@ -95,17 +95,20 @@ export default {
 
 .postInfo {
   padding: 10px;
-  text-align: center; /* Center align the text */
+  text-align: left; /* Center align the text */
+  width: 100%; /* Make the postInfo span the entire width */
 }
 
 .postTitle {
   font-weight: bold;
   margin-bottom: 10px; /* Increase margin for better spacing */
+  font-size: 13px;
 }
 
 .postDescription {
   color: #666;
   line-height: 1.4;
+  font-size: 11px;
 }
 
 .pageNation{

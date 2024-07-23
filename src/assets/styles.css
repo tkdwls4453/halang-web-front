@@ -1,0 +1,12 @@
+/* src/assets/styles.css */
+body {
+  font-family: 'Pretendard', sans-serif;
+}
+
+.medium {
+  font-weight: 500; /* Pretendard Medium */
+}
+
+.light {
+  font-weight: 300; /* Pretendard Light */
+}

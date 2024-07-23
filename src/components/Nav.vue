@@ -9,7 +9,7 @@
             <li><a href="https://blog.naver.com/success221120">BLOG</a></li>
             <li><a href="https://www.instagram.com/halanginterior_official?igsh=Mm9ncHVvM2JzMG13">INSTAGRAM</a></li>
             <li><a href="https://www.youtube.com/@halanginterior">YOUTUBE</a></li>
-            <li :class="{ active: $store.state.curContent === 'review' }" @click="curContent = 'review'">REVIEW</li>
+            <li :class="{ active: $store.state.curContent === 'review' }" @click="$store.commit('updateCurContent', 'review')">REVIEW</li>
           </ul>
         </div>
   </div>
@@ -39,6 +39,7 @@ export default {
   height: 70px; /* 컨테이너의 높이 설정 */
   transition: transform 0.3s ease; /* 애니메이션 효과 추가 */
   margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .logoImg:hover {

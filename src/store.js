@@ -6,10 +6,8 @@ const store = createStore({
       curContent: "portfolio",
       curProjectId: 0,
       projects: [
-        // { id: 0, images: ['image1.jpg', 'image2.jpg'] },
-        // { id: 1, images: ['image3.jpg', 'image4.jpg'] },
-        // { id: 16, images: ['image5.jpg', 'image6.jpg'] },
-      ]
+      ],
+      isLogin: false,
     }
   },
 
@@ -28,6 +26,9 @@ const store = createStore({
     },
     addProject(state, newProject) {
       state.projects.push(newProject);
+    },
+    updateIsLogin(state, newIsLogin) {
+      state.isLogin = newIsLogin;
     }
   },
   getters: {

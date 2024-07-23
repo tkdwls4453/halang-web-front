@@ -4,7 +4,7 @@
       <div class="header">
         <router-link to="/" class="logoImg"></router-link>
       </div>
-      <div v-if="!isLogin" class="loginWrapper"> 
+      <div v-if="!$store.state.isLogin" class="loginWrapper"> 
         <div class="title">관리자 로그인</div>
         <div class="subtitle">관리자만 접근 가능합니다.</div>
         <input type="text" v-model="id" placeholder="아이디"/>
@@ -12,11 +12,11 @@
         <button class="loginBtn" :disabled="isLoading" @click="login">로그인</button>
       </div>
 
-      <div v-if="isLogin" class="logoutWrapper">
+      <div v-if="$store.state.isLogin" class="logoutWrapper">
         <button class="logoutBtn" :disabled="isLoading" @click="logout">Logout</button>
       </div>
 
-      <div v-if="isLogin" class="optionsWrapper">
+      <div v-if="$store.state.isLogin" class="optionsWrapper">
         <button class="optionBtn" 
           :class="{active: selectOption === 'portfolio'}" 
           @click="selectOption='portfolio'" :disabled="isLoading">
@@ -30,7 +30,7 @@
         </button>
       </div>
 
-      <div v-if="isLogin" class="content">
+      <div v-if="$store.state.isLogin" class="content">
         <div v-if="selectOption==='portfolio'" class="portfolioInfo">
           <table class="portfolioTable">
             <thead>
@@ -125,6 +125,7 @@ export default {
       this.curProjects = response.data.data;
       console.log(this.curProjects);
       // this.isLogin = true; // Uncomment this line for testing to force the isLogin state to true
+      this.$store.commit('updateIsLogin', true);
     }catch(error){
       console.error(error);
     }
@@ -137,18 +138,18 @@ export default {
         console.log(response.data);
         console.log(response.data.token);
           this.$cookies.set('Authorization', response.data.token, '1d', '', '', true, 'Strict');
-          this.isLogin = true;
+          this.$store.commit('updateIsLogin', true);
       } catch (error) {
         console.error(error);
         alert('로그인 실패');
-        this.isLogin = false;
+        this.$store.commit('updateIsLogin', false);
       } finally {
         this.isLoading = false;
       }
     },
     async logout() {
       this.$cookies.remove('Authorization');
-      this.isLogin = false;
+      this.$store.commit('updateIsLogin', false);
     },
     async uploadData() {
       if (!this.newProject.portfolioImages || !this.newProject.mainImage || this.newProject.portfolioImages.length === 0) {

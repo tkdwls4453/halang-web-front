@@ -45,23 +45,27 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: 50vh;
   margin-bottom: 60px;
 }
 
 .contentWrapper {
   display: flex;
-  width: 100%;
+  width: 90%; /* Adjusted to match the layout */
   justify-content: center;
   align-items: center;
   flex-wrap: nowrap; /* 기본적으로 가로 방향 레이아웃 유지 */
 }
 
 .textContent {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 16px; /* Adjusted font size */
+  line-height: 1.8; /* Adjusted line height */
   color: #333;
-  margin-right: 20px; /* 이미지와의 간격 조정 */
+  margin-right: 40px; /* Adjusted spacing */
+}
+
+.textContent p {
+  font-size: 13px;
 }
 
 .imageContent {
@@ -71,8 +75,8 @@ export default {
 }
 
 .imageContent img {
-  width: 300px;
-  height: 300px;
+  width: 250px; /* Adjusted image size */
+  height: 250px; /* Adjusted image size */
   object-fit: cover;
   padding: 5px;
   margin-top: 15px;

@@ -7,6 +7,7 @@
         <About v-if="$store.state.curContent === 'about'"/>
         <Contact v-if="$store.state.curContent === 'contact'"/>
         <Detail v-if="$store.state.curContent === 'details'"/>
+        <Review v-if="$store.state.curContent === 'review'"/>
       </div>
 
 
@@ -27,6 +28,7 @@ import Nav from "../components/Nav.vue";
 import About from '../components/About.vue';
 import Contact from '../components/Contact.vue';
 import Portfolios from '../components/Portfolios.vue'; 
+import Review from '../components/Review.vue';
 
 export default {
   name: 'MainPage',
@@ -38,7 +40,8 @@ export default {
     About,
     Contact,
     Nav,
-    Portfolios
+    Portfolios,
+    Review
   }
 }
 </script>
