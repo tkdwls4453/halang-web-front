@@ -86,7 +86,7 @@ export default {
   /* margin-top: 11px; */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .aboutWrapper {
     margin-top: 300px;
     margin-bottom: 300px;

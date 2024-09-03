@@ -55,53 +55,51 @@ export default {
 </script>
 
 <style>
+
 .portfolioWrap {
   display: flex;
-  flex-wrap: wrap;
-  /* gap: 20px; */
-  justify-content: space-between;
-  /* padding: 20px; */
+  flex-wrap: wrap; /* 게시물들을 행으로 배치하고, 줄바꿈이 가능하게 함 */
+  justify-content: flex-start; /* 게시물들을 왼쪽 정렬 */
+  margin: -5px; /* 각 게시물 사이에 일정한 간격을 주기 위해 마진을 설정 */
+  margin-left: 0px;
 }
 
 .post {
-  width: calc(33.333% - 11px); /* Adjust this value to fit your layout */
+  width: calc(33% - 20px); /* 각 게시물의 너비를 계산하여 균등하게 배치 */
   background: white;
-  /* border-radius: 10px; */
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+  margin: 3px; /* 각 게시물 사이에 일정한 간격을 설정 */
   overflow: hidden;
   transition: transform 0.2s;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center align the items */
-  /* padding: 5px; */
+  align-items: center; /* 콘텐츠를 중앙에 정렬 */
   text-decoration: none;
 }
 
 .post:hover {
   transform: translateY(-5px);
-   color: inherit;
+  color: inherit;
 }
 
 .image {
   width: 100%;
-  aspect-ratio: 523 / 929; /* Set the aspect ratio, adjust as needed */
+  aspect-ratio: 523 / 929; /* 이미지를 비율에 맞게 보여줌 */
   background-size: cover;
   background-position: center;
-  object-fit: cover; /* Ensure the aspect ratio is maintained */
-  
+  object-fit: cover; /* 이미지의 비율을 유지하며 표시 */
 }
 
 .postInfo {
   padding: 10px;
-  text-align: left; /* Center align the text */
-  width: 100%; /* Make the postInfo span the entire width */
-  margin-bottom: 10px; /* Add some space between the image and post info */
+  text-align: left;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .postTitle {
   font-weight: bold;
-  margin-bottom: 5px; /* Increase margin for better spacing */
-  font-size: 13px;
+  margin-bottom: 5px;
+  font-size: 11px;
 }
 
 .postDescription {
@@ -132,6 +130,10 @@ export default {
 @media screen and (max-width: 768px) {
   .post {
     width: calc(100% ); /* Full width minus padding for smaller screens */
+  }
+  .pageNumber {
+    margin: 0 3px;
+    font-size: 10px;
   }
 }
 </style>

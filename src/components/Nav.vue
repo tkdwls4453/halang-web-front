@@ -42,7 +42,7 @@ export default {
 
 <style>
 .header {
-  width: 82%;
+  width: 100%;
   z-index: 10;
   position: fixed;
   top: 0;
@@ -65,7 +65,7 @@ export default {
 .tap {
   flex-direction: column;
   align-items: center;
-  margin-bottom: 5px
+  margin-bottom: 5px;
 }
 
 .tap ul {
@@ -99,8 +99,10 @@ export default {
   display: none;
   font-size: 30px;
   cursor: pointer;
-  align-self: flex-end;
-  margin-top: -30px; /* Adjust to position close to the right edge */
+  position: absolute; /* 위치를 절대 위치로 설정 */
+  top: 10px; /* 상단 여백 */
+  right: 10px; /* 오른쪽 끝에 붙도록 설정 */
+  padding: 10px;
 }
 
 .close-btn {
@@ -123,8 +125,9 @@ export default {
 
   .tap {
     display: flex;
-    margin-right: 30px
+    margin-right: 30px;
   }
+
   .tap ul {
     display: none;
     flex-direction: column;
@@ -151,7 +154,9 @@ export default {
 
   .hamburger {
     display: block;
-    margin-left: auto;
+    position: absolute; /* 절대 위치로 설정 */
+    top: 30px;
+    right: 10px; /* 오른쪽 끝에 붙도록 설정 */
     padding: 10px;
   }
 
@@ -167,4 +172,5 @@ export default {
     display: block;
   }
 }
+
 </style>

@@ -118,7 +118,10 @@
             <label v-if="selectOption==='portfolio'" for="portfolioImages">포트폴리오 이미지:</label>
             <input v-if="selectOption==='portfolio'" type="file" multiple id="portfolioImages" @change="handlePortfolioImagesChange" required>
 
-            <label v-if="selectOption==='review'" for="reviewTitle">제목:</label>
+            <label v-if="selectOption==='review'" for="reviewCustomer">고객:</label>
+            <input v-if="selectOption==='review'" type="text" id="reviewCustomer" v-model="newReview.customer"  required>
+
+            <label v-if="selectOption==='review'" for="reviewTitle">현장명:</label>
             <input v-if="selectOption==='review'" type="text" id="reviewTitle" v-model="newReview.title"  required>
 
             <label v-if="selectOption==='review'" for="content">내용:</label>
@@ -156,6 +159,7 @@ export default {
         portfolioImages: []
       },
       newReview: {
+        customer: '',
         title: '',
         content: '',
         image: null
@@ -238,6 +242,7 @@ export default {
       } else if (this.selectOption === 'review') {
         formData.append('title', this.newReview.title);
         formData.append('content', this.newReview.content);
+        formData.append('customer', this.newReview.customer)
         formData.append('image', this.newReview.image);
       
       }
@@ -246,9 +251,11 @@ export default {
         console.log(formData.get('title'));
         console.log(formData.get('content'));
         console.log(formData.get('image'));
+        const authToken = 'Bearer ' + this.$cookies.get('Authorization');
         const response = await axios.post(this.selectOption === 'portfolio' ? '/api/post' : '/api/review', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+           'Content-Type': 'multipart/form-data',
+            'Authorization': authToken 
           }
         });
         console.log(response);
@@ -400,10 +407,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.wrapper {
-  width: 85%;
 }
 
 .header {
