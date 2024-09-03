@@ -32,7 +32,7 @@ p{
   margin-top: 50px;
   margin-bottom: 50px;
   line-height: 25px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 a{

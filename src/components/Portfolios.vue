@@ -39,7 +39,6 @@ export default {
     }
   },
   methods: {
-    
     async getPosts(page){
       try{
         const response = await axios.get(`/api/posts?page=${page}`);
@@ -59,22 +58,22 @@ export default {
 .portfolioWrap {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  /* gap: 20px; */
   justify-content: space-between;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .post {
-  width: calc(33.333% - 40px); /* Adjust this value to fit your layout */
+  width: calc(33.333% - 11px); /* Adjust this value to fit your layout */
   background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* border-radius: 10px; */
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   overflow: hidden;
   transition: transform 0.2s;
   display: flex;
   flex-direction: column;
   align-items: center; /* Center align the items */
-  padding: 10px;
+  /* padding: 5px; */
   text-decoration: none;
 }
 
@@ -88,20 +87,20 @@ export default {
   aspect-ratio: 523 / 929; /* Set the aspect ratio, adjust as needed */
   background-size: cover;
   background-position: center;
-  /* background-image: url('@/assets/images/background.png'); */
   object-fit: cover; /* Ensure the aspect ratio is maintained */
-  margin-bottom: 20px; /* Add some space between the image and post info */
+  
 }
 
 .postInfo {
   padding: 10px;
   text-align: left; /* Center align the text */
   width: 100%; /* Make the postInfo span the entire width */
+  margin-bottom: 10px; /* Add some space between the image and post info */
 }
 
 .postTitle {
   font-weight: bold;
-  margin-bottom: 10px; /* Increase margin for better spacing */
+  margin-bottom: 5px; /* Increase margin for better spacing */
   font-size: 13px;
 }
 
@@ -111,21 +110,28 @@ export default {
   font-size: 11px;
 }
 
-.pageNation{
+.pageNation {
   display: flex;
   justify-content: center;
   margin: 20px 0;
   font-size: 0.9em;
-  width: 100%; 
+  width: 100%;
 }
 
-.pageNumber{
+.pageNumber {
   margin: 0 5px;
   padding: 5px 10px;
   color: #3B3838;
   cursor: pointer;
 }
-.active{
+
+.active {
   color: #136AB2;
+}
+
+@media screen and (max-width: 768px) {
+  .post {
+    width: calc(100% ); /* Full width minus padding for smaller screens */
+  }
 }
 </style>

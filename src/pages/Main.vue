@@ -47,6 +47,7 @@ export default {
 </script>
 
 <style>
+
 .mainPage {
   display: flex;
   justify-content: center;

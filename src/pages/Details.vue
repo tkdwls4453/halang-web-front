@@ -29,7 +29,7 @@ export default {
   async created() {
     const id = this.$route.params.id;
     try {
-      const response = await axios.get(`/api/post/${id}`);
+      const response = await axios.get(`/api/posts/${id}`);
       this.images = response.data.data;
       this.displayedImages = this.images.slice(0, this.itemsToLoad);
       this.setupObserver();

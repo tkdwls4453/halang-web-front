@@ -46,13 +46,13 @@
             </thead>
             <tbody>
               <tr v-for="(curContent, i) in curProjects" :key="i">
-                <td>{{curContent.sequence}}</td>
+                <td>{{i+1}}</td>
                 <td>{{curContent.title}}</td>
                 <td>{{curContent.createDate}}</td>
                 <td>{{curContent.updateDate}}</td>
                 <td>
-                  <button v-if="curContent.sequence > 1" class="moveBtn" :disabled="isLoading" @click="moveUp(i)">↑</button>
-                  <button v-if="curContent.sequence < curProjects.length" class="moveBtn" :disabled="isLoading" @click="moveDown(i)">↓</button>
+                  <button v-if="i+1 > 1" class="moveBtn" :disabled="isLoading" @click="moveUp(i)">↑</button>
+                  <button v-if="i+1 < curProjects.length" class="moveBtn" :disabled="isLoading" @click="moveDown(i)">↓</button>
                 </td>
                 <td><button class="deleteBtn" :disabled="isLoading" @click="deletePost(curContent.id)">Delete</button></td>
                 <td><button class="editBtn" :disabled="isLoading">Edit</button></td>
@@ -67,26 +67,65 @@
         </div>
 
         <div v-if="selectOption==='review'" class="reviewInfo">
-          <h1>Review</h1>
-          <p>Welcome to your portfolio section. Here you can add, edit, and delete your projects.</p>
+          <table class="reviewTable">
+            <thead>
+              <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>생성날짜</th>
+                <th>수정날짜</th>
+                <th>이동</th>
+                <th>삭제</th>
+                <th>수정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(review, i) in curReviews" :key="i">
+                <td>{{i+1}}</td>
+                <td>{{review.title}}</td>
+                <td>{{review.createDate}}</td>
+                <td>{{review.updateDate}}</td>
+                <td>
+                  <button v-if="i + 1 > 1" class="moveBtn" :disabled="isLoading" @click="moveReviewUp(i)">↑</button>
+                  <button v-if="i + 1 < curReviews.length" class="moveBtn" :disabled="isLoading" @click="moveReviewDown(i)">↓</button>
+                </td>
+                <td><button class="deleteBtn" :disabled="isLoading" @click="deleteReview(review.id)">Delete</button></td>
+                <td><button class="editBtn" :disabled="isLoading">Edit</button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="buttonContainer">
+            <button class="addBtn" @click="showModal = true" :disabled="isLoading">리뷰 추가</button>
+          </div>
         </div>
       </div>
 
       <div v-if="showModal" class="modalOverlay" @click.self="handleCloseModal">
         <div class="modalContent">
-          <h2>프로젝트 추가</h2>
+          <h2 v-if="selectOption==='portfolio'">프로젝트 추가</h2>
+          <h2 v-if="selectOption==='review'">리뷰 추가</h2>
           <form @submit.prevent="uploadData">
-            <label for="title">제목:</label>
-            <input type="text" id="title" v-model="newProject.title" required>
+            <label v-if="selectOption==='portfolio'" for="title">제목:</label>
+            <input v-if="selectOption==='portfolio'" type="text" id="title" v-model="newProject.title"  required>
             
-            <label for="description">설명:</label>
-            <input type="text" id="description" v-model="newProject.description" required>
+            <label v-if="selectOption==='portfolio'" for="description">설명:</label>
+            <input v-if="selectOption==='portfolio'" type="text" id="description" v-model="newProject.description" required>
 
-            <label for="mainImage">대표 이미지:</label>
-            <input type="file" id="mainImage" @change="handleMainImageChange" required>
+            <label v-if="selectOption==='portfolio'" for="mainImage">대표 이미지:</label>
+            <input v-if="selectOption==='portfolio'" type="file" id="mainImage" @change="handleMainImageChange" required>
 
-            <label for="portfolioImages">포트폴리오 이미지:</label>
-            <input type="file" multiple id="portfolioImages" @change="handlePortfolioImagesChange" required>
+            <label v-if="selectOption==='portfolio'" for="portfolioImages">포트폴리오 이미지:</label>
+            <input v-if="selectOption==='portfolio'" type="file" multiple id="portfolioImages" @change="handlePortfolioImagesChange" required>
+
+            <label v-if="selectOption==='review'" for="reviewTitle">제목:</label>
+            <input v-if="selectOption==='review'" type="text" id="reviewTitle" v-model="newReview.title"  required>
+
+            <label v-if="selectOption==='review'" for="content">내용:</label>
+            <textarea v-if="selectOption==='review'" id="content" v-model="newReview.content" required></textarea>
+
+            <label v-if="selectOption==='review'" for="image">이미지:</label>
+            <input v-if="selectOption==='review'" type="file" id="image" @change="handleReviewImagesChange" required>
             
             <button type="submit" :disabled="isLoading">추가</button>
           </form>
@@ -116,12 +155,21 @@ export default {
         mainImage: null,
         portfolioImages: []
       },
-      curProjects: []
+      newReview: {
+        title: '',
+        content: '',
+        image: null
+      },
+      curProjects: [],
+      curReviews: [],
     }
   },
   async created(){
     try{
-      const response = await axios.get('/api/admin/posts');
+      const authToken = 'Bearer ' + this.$cookies.get('Authorization');
+      const response = await axios.get('/api/admin/posts',{
+        headers: { Authorization: authToken }
+      });
       this.curProjects = response.data.data;
       console.log(this.curProjects);
       // this.isLogin = true; // Uncomment this line for testing to force the isLogin state to true
@@ -129,6 +177,19 @@ export default {
     }catch(error){
       console.error(error);
     }
+
+    try{
+      const authToken = 'Bearer ' + this.$cookies.get('Authorization');
+      const response = await axios.get('/api/reviews',{
+        headers: { Authorization: authToken }
+      });
+      console.log(response.data.data);
+      this.curReviews = response.data.data;
+    }catch(error){
+      console.error(error);
+    }
+    
+
   },
   methods: {
     async login() {
@@ -152,43 +213,68 @@ export default {
       this.$store.commit('updateIsLogin', false);
     },
     async uploadData() {
-      if (!this.newProject.portfolioImages || !this.newProject.mainImage || this.newProject.portfolioImages.length === 0) {
-        alert('이미지를 넣어주세요.');
-        return;
+      if (this.selectOption === 'portfolio') {
+        if (!this.newProject.portfolioImages || !this.newProject.mainImage || this.newProject.portfolioImages.length === 0) {
+          alert('이미지를 넣어주세요.');
+          return;
+        }
+      } else if (this.selectOption === 'review') {
+        if (!this.newReview.image) {
+          alert('이미지를 넣어주세요.');
+          return;
+        }
       }
 
       this.isLoading = true;
 
       const formData = new FormData();
-      formData.append('title', this.newProject.title);
-      formData.append('description', this.newProject.description);
-      formData.append('represent', this.newProject.mainImage);
-      this.newProject.portfolioImages.forEach((image) => {
-        formData.append('images', image);
-      });
+      if (this.selectOption === 'portfolio') {
+        formData.append('title', this.newProject.title);
+        formData.append('description', this.newProject.description);
+        formData.append('represent', this.newProject.mainImage);
+        this.newProject.portfolioImages.forEach((image) => {
+          formData.append('images', image);
+        });
+      } else if (this.selectOption === 'review') {
+        formData.append('title', this.newReview.title);
+        formData.append('content', this.newReview.content);
+        formData.append('image', this.newReview.image);
+      
+      }
 
       try {
-        const response = await axios.post('/api/post', formData, {
+        console.log(formData.get('title'));
+        console.log(formData.get('content'));
+        console.log(formData.get('image'));
+        const response = await axios.post(this.selectOption === 'portfolio' ? '/api/post' : '/api/review', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
         console.log(response);
-        alert('새로운 프로젝트 생성했습니다.');
+        alert(this.selectOption === 'portfolio' ? '새로운 프로젝트 생성했습니다.' : '새로운 리뷰 생성했습니다.');
       } catch (error) {
-        alert('프로젝트 생성을 실패했습니다.');
+        alert(this.selectOption === 'portfolio' ? '프로젝트 생성을 실패했습니다.' : '리뷰 생성을 실패했습니다.');
       } finally {
         window.location.reload();
       }
 
       this.showModal = false;
 
-      this.newProject = {
-        title: '',
-        description: '',
-        mainImage: null,
-        portfolioImages: []
-      };
+      if (this.selectOption === 'portfolio') {
+        this.newProject = {
+          title: '',
+          description: '',
+          mainImage: null,
+          portfolioImages: []
+        };
+      } else if (this.selectOption === 'review') {
+        this.newReview = {
+          title: '',
+          description: '',
+          images: []
+        };
+      }
     },
     handleMainImageChange(event) {
       const file = event.target.files[0];
@@ -197,6 +283,10 @@ export default {
     handlePortfolioImagesChange(event) {
       const files = Array.from(event.target.files);
       this.newProject.portfolioImages = files;
+    },
+    handleReviewImagesChange(event) {
+      const file = event.target.files[0];
+      this.newReview.image = file;
     },
     handleCloseModal() {
       if (!this.isLoading) {
@@ -227,14 +317,41 @@ export default {
 
       this.curProjects = tmpProjects
     },
+    moveReviewUp(index) {
+      const tmpReviews = this.curReviews.map(review => {
+        return { ...review };
+      });
+
+      [tmpReviews[index], tmpReviews[index - 1]] = [tmpReviews[index - 1], tmpReviews[index]];
+      tmpReviews.forEach((review, idx) => {
+        review.sequence = idx + 1;
+      });
+
+      this.curReviews = tmpReviews;
+    },
+    moveReviewDown(index) {
+      const tmpReviews = this.curReviews.map(review => {
+        return { ...review };
+      });
+
+      [tmpReviews[index], tmpReviews[index + 1]] = [tmpReviews[index + 1], tmpReviews[index]];
+      tmpReviews.forEach((review, idx) => {
+        review.sequence = idx + 1;
+      });
+
+      this.curReviews = tmpReviews;
+    },
     async changeSequence(){
-      const chanedSequenceInfo = this.curProjects.map(project => ({
+      const changedSequenceInfo = this.curProjects.map(project => ({
         id: project.id,
         sequence: project.sequence
       }));
       
       try {
-        const response = await axios.put('/api/post/sequence', chanedSequenceInfo);
+        const authToken = 'Bearer ' + this.$cookies.get('Authorization');
+        const response = await axios.put('/api/post/sequence', changedSequenceInfo,{
+          headers: { Authorization: authToken }
+        });
         console.log(response.data);
       } catch (error) {
         console.error(error);
@@ -245,9 +362,28 @@ export default {
     async deletePost(postId) {
       if(window.confirm("정말로 삭제하기겠습니까?")){
         try{
-          const response = await axios.delete(`/api/post/${postId}`)
+          const authToken = 'Bearer ' + this.$cookies.get('Authorization');
+          const response = await axios.delete(`/api/post/${postId}`,{
+            headers: { Authorization: authToken }
+          })
           console.log(response.data);
           alert('게시물이 삭제됐습니다.')
+          window.location.reload();
+        }catch(error){
+          console.error(error);
+          alert('삭제 실패');
+        }
+      }
+    },
+    async deleteReview(reviewId) {
+      if(window.confirm("정말로 삭제하기겠습니까?")){
+        try{
+          const authToken = 'Bearer ' + this.$cookies.get('Authorization');
+          const response = await axios.delete(`/api/review/${reviewId}`,{
+            headers: { Authorization: authToken }
+          })
+          console.log(response.data);
+          alert('리뷰가 삭제됐습니다.')
           window.location.reload();
         }catch(error){
           console.error(error);
@@ -325,7 +461,7 @@ export default {
 }
 
 .logoutWrapper {
-  margin-top: 100px;
+  margin-top: 150px;
   display: flex;
   justify-content: flex-end;
 }
@@ -374,28 +510,28 @@ export default {
   width: 100%;
 }
 
-.portfolioTable {
+.portfolioTable, .reviewTable {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
 }
 
-.portfolioTable th, .portfolioTable td {
+.portfolioTable th, .portfolioTable td, .reviewTable th, .reviewTable td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
 }
 
-.portfolioTable th {
+.portfolioTable th, .reviewTable th {
   background-color: #f2f2f2;
   color: black;
 }
 
-.portfolioTable tr:nth-child(even) {
+.portfolioTable tr:nth-child(even), .reviewTable tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.portfolioTable tr:hover {
+.portfolioTable tr:hover, .reviewTable tr:hover {
   background-color: #f1f1f1;
 }
 
@@ -494,7 +630,7 @@ export default {
   margin-top: 10px;
 }
 
-.modalContent form input {
+.modalContent form input, .modalContent form textarea {
   padding: 8px;
   margin-top: 5px;
   border-radius: 4px;
